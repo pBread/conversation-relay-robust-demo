@@ -2,55 +2,55 @@ const mockDatabase = {
   availableAppointments: [
     // Existing Week
     {
-      date: "2024-11-02",
+      date: makeFutureDate(1),
       time: "10:00 AM",
       type: "in-person",
       apartmentType: "one-bedroom",
     },
     {
-      date: "2024-11-03",
+      date: makeFutureDate(2),
       time: "1:00 PM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-04",
+      date: makeFutureDate(3),
       time: "11:00 AM",
       type: "self-guided",
       apartmentType: "studio",
     },
     {
-      date: "2024-11-05",
+      date: makeFutureDate(3),
       time: "2:00 PM",
       type: "in-person",
       apartmentType: "three-bedroom",
     },
     {
-      date: "2024-11-06",
+      date: makeFutureDate(3),
       time: "3:00 PM",
       type: "self-guided",
       apartmentType: "one-bedroom",
     },
     {
-      date: "2024-11-07",
+      date: makeFutureDate(4),
       time: "9:00 AM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-08",
+      date: makeFutureDate(5),
       time: "11:00 AM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-09",
+      date: makeFutureDate(6),
       time: "10:00 AM",
       type: "self-guided",
       apartmentType: "studio",
     },
     {
-      date: "2024-11-10",
+      date: makeFutureDate(6),
       time: "4:00 PM",
       type: "in-person",
       apartmentType: "three-bedroom",
@@ -58,61 +58,61 @@ const mockDatabase = {
 
     // Extended Week 1
     {
-      date: "2024-11-11",
+      date: makeFutureDate(7),
       time: "8:00 AM",
       type: "in-person",
       apartmentType: "studio",
     },
     {
-      date: "2024-11-11",
+      date: makeFutureDate(7),
       time: "11:00 AM",
       type: "in-person",
       apartmentType: "one-bedroom",
     },
     {
-      date: "2024-11-11",
+      date: makeFutureDate(7),
       time: "3:00 PM",
       type: "self-guided",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-12",
+      date: makeFutureDate(8),
       time: "1:00 PM",
       type: "in-person",
       apartmentType: "three-bedroom",
     },
     {
-      date: "2024-11-12",
+      date: makeFutureDate(8),
       time: "4:00 PM",
       type: "in-person",
       apartmentType: "one-bedroom",
     },
     {
-      date: "2024-11-13",
+      date: makeFutureDate(9),
       time: "9:00 AM",
       type: "self-guided",
       apartmentType: "studio",
     },
     {
-      date: "2024-11-13",
+      date: makeFutureDate(9),
       time: "2:00 PM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-14",
+      date: makeFutureDate(10),
       time: "10:00 AM",
       type: "in-person",
       apartmentType: "three-bedroom",
     },
     {
-      date: "2024-11-14",
+      date: makeFutureDate(10),
       time: "4:00 PM",
       type: "self-guided",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-15",
+      date: makeFutureDate(11),
       time: "12:00 PM",
       type: "in-person",
       apartmentType: "studio",
@@ -120,61 +120,61 @@ const mockDatabase = {
 
     // Extended Week 2
     {
-      date: "2024-11-16",
+      date: makeFutureDate(12),
       time: "11:00 AM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-16",
+      date: makeFutureDate(12),
       time: "3:00 PM",
       type: "in-person",
       apartmentType: "three-bedroom",
     },
     {
-      date: "2024-11-17",
+      date: makeFutureDate(13),
       time: "9:00 AM",
       type: "self-guided",
       apartmentType: "one-bedroom",
     },
     {
-      date: "2024-11-17",
+      date: makeFutureDate(13),
       time: "2:00 PM",
       type: "in-person",
       apartmentType: "studio",
     },
     {
-      date: "2024-11-18",
+      date: makeFutureDate(14),
       time: "4:00 PM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-18",
+      date: makeFutureDate(14),
       time: "12:00 PM",
       type: "self-guided",
       apartmentType: "three-bedroom",
     },
     {
-      date: "2024-11-19",
+      date: makeFutureDate(15),
       time: "10:00 AM",
       type: "in-person",
       apartmentType: "one-bedroom",
     },
     {
-      date: "2024-11-19",
+      date: makeFutureDate(15),
       time: "3:00 PM",
       type: "in-person",
       apartmentType: "two-bedroom",
     },
     {
-      date: "2024-11-20",
+      date: makeFutureDate(16),
       time: "1:00 PM",
       type: "in-person",
       apartmentType: "three-bedroom",
     },
     {
-      date: "2024-11-20",
+      date: makeFutureDate(16),
       time: "5:00 PM",
       type: "self-guided",
       apartmentType: "studio",
@@ -186,7 +186,7 @@ const mockDatabase = {
       layout: "Studio",
       squareFeet: 450,
       rent: 1050,
-      moveInDate: "2024-11-15",
+      moveInDate: makeFutureDayOfMonth(1, 1),
       features: ["1 bathroom", "open kitchen", "private balcony"],
       petPolicy: "No pets allowed.",
       fees: {
@@ -209,7 +209,7 @@ const mockDatabase = {
       layout: "One-bedroom",
       squareFeet: 600,
       rent: 1200,
-      moveInDate: "2024-11-20",
+      moveInDate: makeFutureDayOfMonth(1, 15),
       features: ["1 bedroom", "1 bathroom", "walk-in closet"],
       petPolicy: "Cats only. No dogs or any other animals.",
       fees: {
@@ -232,7 +232,7 @@ const mockDatabase = {
       layout: "Two-bedroom",
       squareFeet: 950,
       rent: 1800,
-      moveInDate: "2024-11-10",
+      moveInDate: makeFutureDayOfMonth(2, 1),
       features: ["2 bedrooms", "2 bathrooms", "walk-in closets", "balcony"],
       petPolicy: "Cats and dogs allowed, but only 1 each.",
       fees: {
@@ -255,7 +255,7 @@ const mockDatabase = {
       layout: "Three-bedroom",
       squareFeet: 1200,
       rent: 2500,
-      moveInDate: "2024-11-25",
+      moveInDate: makeFutureDayOfMonth(2, 1),
       features: [
         "3 bedrooms",
         "2 bathrooms",
@@ -283,5 +283,31 @@ const mockDatabase = {
     },
   },
 };
+
+function makeFutureDate(daysToAdd) {
+  if (daysToAdd === undefined) daysToAdd = Math.floor(Math.random() * 10) + 1;
+
+  const dt = new Date();
+  dt.setDate(dt.getDate() + daysToAdd);
+
+  const year = dt.getFullYear();
+  const mo = `${dt.getMonth() + 1}`.padStart(2, "0");
+  const da = `${dt.getDate()}`.padStart(2, "0");
+
+  return `${year}-${mo}-${da}`;
+}
+
+function makeFutureDayOfMonth(monthsToAdd, dayOfMonth = 1) {
+  if (monthsToAdd === undefined)
+    monthsToAdd = Math.floor(Math.random() * 3) + 1;
+
+  const dt = new Date();
+  dt.setMonth(dt.getMonth() + monthsToAdd);
+
+  const year = dt.getFullYear();
+  const mo = `${dt.getMonth() + 1}`.padStart(2, "0");
+  const da = `${dt.getDate()}`.padStart(2, "0");
+  return `${year}-${mo}-${dayOfMonth}`;
+}
 
 module.exports = mockDatabase;

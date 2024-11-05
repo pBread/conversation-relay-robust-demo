@@ -1,5 +1,6 @@
-require("dotenv").config();
 require("colors");
+
+const cfg = require("./config");
 
 const express = require("express");
 const ExpressWs = require("express-ws");
@@ -18,11 +19,8 @@ const {
   handleDtmfInput,
 } = require("./functions/helper-functions");
 
-const app = express();
-ExpressWs(app);
+const { app } = ExpressWs(express());
 app.use(express.urlencoded({ extended: true })).use(express.json());
-
-const PORT = process.env.PORT || 3000;
 
 app.post("/incoming", (req, res) => {
   try {
@@ -30,7 +28,11 @@ app.post("/incoming", (req, res) => {
     const response = `\
 <Response>
   <Connect action="https://voxray-6456.twil.io/live-agent-handoff">
-    <ConversationRelay url="wss://${process.env.SERVER}/sockets" ttsProvider="amazon" voice="Danielle-Neural" dtmfDetection="true" interruptByDtmf="true" />
+    <ConversationRelay  url="wss://${process.env.SERVER}/sockets" 
+                        ttsProvider="${cfg.ttsProvider}" 
+                        voice="${cfg.ttsVoice}" 
+                        dtmfDetection="true" 
+                        interruptByDtmf="true" />
   </Connect>
 </Response>`;
     res.type("text/xml");
@@ -168,6 +170,6 @@ app.ws("/sockets", (ws) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(cfg.port, () => {
+  console.log(`Server running on port ${cfg.port}`);
 });

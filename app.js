@@ -20,23 +20,32 @@ const {
 
 const app = express();
 ExpressWs(app);
+app.use(express.urlencoded({ extended: true })).use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
 app.post("/incoming", (req, res) => {
   try {
     // Build the response for Twilio's <Connect><Voxray> verb
-    const response = `<Response>
-      <Connect action="https://voxray-6456.twil.io/live-agent-handoff">
-        <Voxray url="wss://${process.env.SERVER}/sockets" ttsProvider="amazon" voice="Danielle-Neural" dtmfDetection="true" interruptByDtmf="true" />
-      </Connect>
-    </Response>`;
+    const response = `\
+<Response>
+  <Connect action="https://voxray-6456.twil.io/live-agent-handoff">
+    <ConversationRelay url="wss://${process.env.SERVER}/sockets" ttsProvider="amazon" voice="Danielle-Neural" dtmfDetection="true" interruptByDtmf="true" />
+  </Connect>
+</Response>`;
     res.type("text/xml");
     res.send(response);
   } catch (err) {
     console.error(`[App.js] Error in /incoming route: ${err}`);
     res.status(500).send("Internal Server Error");
   }
+});
+
+app.post("/call-status-update", (req, res) => {
+  const status = req.body?.CallStatus;
+  console.log(`[App.js] Call status update: ${status}`);
+
+  res.status(200).end();
 });
 
 app.ws("/sockets", (ws) => {

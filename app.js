@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true })).use(express.json());
 
 app.post("/incoming", (req, res) => {
   try {
-    // Build the response for Twilio's <Connect><Voxray> verb
+    // Build the response for Twilio's <Connect><ConversationRelay> verb
     const response = `\
 <Response>
   <Connect action="https://voxray-6456.twil.io/live-agent-handoff">

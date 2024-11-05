@@ -10,6 +10,8 @@ if (process.env.NODE_ENV !== "test") {
 // HTTP Port to run our web application
 cfg.port = process.env.PORT || 3000;
 
+cfg.server = process.env.SERVER;
+
 // Your Twilio account SID and auth token, both found at:
 // https://www.twilio.com/user/account
 //
@@ -23,6 +25,9 @@ cfg.callerId = process.env.TWILIO_CALLER_ID;
 
 cfg.apiKey = process.env.TWILIO_API_KEY;
 cfg.apiSecret = process.env.TWILIO_API_SECRET;
+
+cfg.ttsProvider = process.env.TTS_PROVIDER ?? "amazon";
+cfg.ttsVoice = process.env.TTS_VOICE ?? "Danielle-Neural";
 
 // Export configuration object
 module.exports = cfg;

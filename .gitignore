@@ -149,5 +149,6 @@ dist
 fly.toml
 
 .DS_Store
+local/
 
 # End of https://www.toptal.com/developers/gitignore/api/node

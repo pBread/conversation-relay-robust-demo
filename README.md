@@ -87,11 +87,6 @@ twilio phone-numbers:update +1[your-twilio-number] --voice-url=https://your-serv
 
 This configuration tells Twilio to send incoming call audio to your app when someone calls your number. The app responds to the incoming call webhook with a [Stream](https://www.twilio.com/docs/voice/twiml/stream) TwiML verb that will connect an audio media stream to your websocket server.
 
-## Application Workflow
-
-CallGPT coordinates the data flow between multiple different services including Deepgram, OpenAI, and Twilio Media Streams:
-![Call GPT Flow](https://github.com/twilio-labs/call-gpt/assets/1418949/0b7fcc0b-d5e5-4527-bc4c-2ffb8931139c)
-
 ## Modifying the ChatGPT Context & Prompt
 
 Within `gpt-service.js` you'll find the settings for the GPT's initial context and prompt. For example:

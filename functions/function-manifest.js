@@ -12,20 +12,19 @@ const tools = [
       },
     },
   },
-
   {
     type: "function",
     function: {
       name: "liveAgentHandoff",
       description:
-        "Initiates a handoff to a live agent based on user request or sensitive topics.",
+        "Initiates a handoff to a live agent based on user request or specific escalation conditions.",
       parameters: {
         type: "object",
         properties: {
           reason: {
             type: "string",
             description:
-              "The reason for the handoff, such as user request, legal issue, financial matter, or other sensitive topics.",
+              "The reason for the handoff, such as user request, incorrect VIN, mismatched vehicle description, or other issues.",
           },
           context: {
             type: "string",
@@ -40,211 +39,105 @@ const tools = [
   {
     type: "function",
     function: {
-      name: "sendAppointmentConfirmationSms",
+      name: "verifyVIN",
       description:
-        "Sends an SMS confirmation for a scheduled tour to the user.",
+        "Verifies the provided VIN number against the vehicle information in the database.",
       parameters: {
         type: "object",
         properties: {
-          appointmentDetails: {
-            type: "object",
-            properties: {
-              date: {
-                type: "string",
-                description: "The date of the scheduled tour (YYYY-MM-DD).",
-              },
-              time: {
-                type: "string",
-                description:
-                  "The time of the scheduled tour (e.g., '10:00 AM').",
-              },
-              type: {
-                type: "string",
-                enum: ["in-person", "self-guided"],
-                description:
-                  "The type of tour (either in-person or self-guided).",
-              },
-              apartmentType: {
-                type: "string",
-                enum: ["studio", "one-bedroom", "two-bedroom", "three-bedroom"],
-                description: "The type of apartment for the tour.",
-              },
-            },
-            required: ["date", "time", "type", "apartmentType"],
-          },
-          to: {
-            type: "string",
-            description: "The user's phone number (to send the SMS).",
-          },
-          from: {
+          vin: {
             type: "string",
             description:
-              "The phone number used to send the SMS (Twilio 'from' number).",
+              "The Vehicle Identification Number (VIN) provided by the user.",
           },
-          userProfile: {
-            type: "object",
-            properties: {
-              firstName: {
-                type: "string",
-                description: "The user's first name.",
-              },
-              lastName: {
-                type: "string",
-                description: "The user's last name.",
-              },
-              email: {
-                type: "string",
-                description: "The user's email address.",
-              },
-            },
-            required: ["firstName"],
+          vehicleId: {
+            type: "string",
+            description:
+              "The internal database ID for the vehicle the agent is calling about.",
           },
         },
-        required: ["appointmentDetails", "to", "from", "userProfile"],
+        required: ["vin", "vehicleId"],
       },
     },
   },
   {
     type: "function",
     function: {
-      name: "scheduleTour",
-      description: "Schedules a tour for the user at the apartment complex.",
+      name: "schedulePickup",
+      description:
+        "Schedules the vehicle pickup by recording the date when the vehicle will be available and the body shop's working hours.",
       parameters: {
         type: "object",
         properties: {
-          date: {
+          vehicleId: {
             type: "string",
             description:
-              "The date the user wants to schedule the tour for (YYYY-MM-DD). **Convert any relative date expressions to this format based on {{currentDate}}.**",
+              "The internal database ID for the vehicle being scheduled for pickup.",
           },
-          time: {
+          availabilityDate: {
             type: "string",
             description:
-              'The time the user wants to schedule the tour for (e.g., "10:00 AM").',
+              "The date when the vehicle will be available for pickup (YYYY-MM-DD). **Convert any relative date expressions to this format based on {{currentDate}}.**",
           },
-          type: {
+          workingHours: {
             type: "string",
-            enum: ["in-person", "self-guided"],
-            description: "The type of tour, either in-person or self-guided.",
-          },
-          apartmentType: {
-            type: "string",
-            enum: ["studio", "one-bedroom", "two-bedroom", "three-bedroom"],
             description:
-              "The layout of the apartment the user is interested in.",
+              "The working hours of the body shop during which the pickup can occur.",
           },
         },
-        required: ["date", "time", "type", "apartmentType"],
+        required: ["vehicleId", "availabilityDate", "workingHours"],
       },
     },
   },
   {
     type: "function",
     function: {
-      name: "checkAvailability",
+      name: "getPickupInstructions",
       description:
-        "Checks the availability of tour slots based on the user’s preferences.",
+        "Records any special instructions for the pickup, such as who to ask for, specific location details, or other relevant information.",
       parameters: {
         type: "object",
         properties: {
-          date: {
+          vehicleId: {
             type: "string",
             description:
-              "The date the user wants to check for tour availability (YYYY-MM-DD). **Convert any relative date expressions to this format based on {{currentDate}}.**",
+              "The internal database ID for the vehicle being picked up.",
           },
-          time: {
+          instructions: {
             type: "string",
             description:
-              'The time the user wants to check for availability (e.g., "10:00 AM").',
-          },
-          type: {
-            type: "string",
-            enum: ["in-person", "self-guided"],
-            description: "The type of tour, either in-person or self-guided.",
-          },
-          apartmentType: {
-            type: "string",
-            enum: ["studio", "one-bedroom", "two-bedroom", "three-bedroom"],
-            description:
-              "The layout of the apartment the user is interested in.",
+              "Any special instructions for the pickup, provided by the user.",
           },
         },
-        required: ["date", "type", "apartmentType"],
+        required: ["vehicleId", "instructions"],
       },
     },
   },
   {
     type: "function",
     function: {
-      name: "listAvailableApartments",
+      name: "getAdditionalVehicleDetails",
       description:
-        "Lists available apartments based on optional user criteria.",
+        "Collects additional required data about the vehicle, such as the number of available keys.",
       parameters: {
         type: "object",
         properties: {
-          date: {
+          vehicleId: {
             type: "string",
             description:
-              "The move-in date the user prefers (optional, YYYY-MM-DD). **Convert any relative date expressions to this format based on {{currentDate}}.**",
+              "The internal database ID for the vehicle in question.",
           },
-          budget: {
+          keys: {
             type: "integer",
-            description:
-              "The budget the user has for rent per month (optional).",
+            description: "The number of keys available for the vehicle.",
           },
-          apartmentType: {
+          otherDetails: {
             type: "string",
-            enum: ["studio", "one-bedroom", "two-bedroom", "three-bedroom"],
             description:
-              "The layout of the apartment the user is interested in (optional).",
+              "Any other additional details provided by the user about the vehicle.",
           },
         },
-        required: [],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "checkExistingAppointments",
-      description: "Retrieves the list of appointments already booked.",
-      parameters: {
-        type: "object",
-        properties: {},
-        required: [],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "commonInquiries",
-      description:
-        "Handles common inquiries such as pet policy, fees, and other complex details, with the option to specify the apartment type.",
-      parameters: {
-        type: "object",
-        properties: {
-          inquiryType: {
-            type: "string",
-            enum: [
-              "pet policy",
-              "fees",
-              "parking",
-              "specials",
-              "income requirements",
-              "utilities",
-            ],
-            description:
-              "The type of inquiry the user wants information about.",
-          },
-          apartmentType: {
-            type: "string",
-            enum: ["studio", "one-bedroom", "two-bedroom", "three-bedroom"],
-            description:
-              "The apartment type for which the inquiry is being made (optional).",
-          },
-        },
-        required: ["inquiryType"],
+        required: ["vehicleId"],
       },
     },
   },

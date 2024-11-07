@@ -1,2 +1,2 @@
-const welcomePrompt = `Hello, this is Emma with Parkview Apartments. Press 1 to hear available apartments, 2 for your appointments, or let me know how I can help you today!`;
+const welcomePrompt = `Hello, may I speak to the person responsible for vehicle logistics?`;
 module.exports = welcomePrompt;

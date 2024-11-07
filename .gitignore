@@ -3,6 +3,9 @@
 
 ### Node ###
 
+# Demo
+data/demo-logs
+
 #personalization
 data/personalization.js
 

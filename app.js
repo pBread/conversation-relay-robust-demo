@@ -11,6 +11,7 @@ const { TextService } = require("./services/text-service");
 const { EndSessionService } = require("./services/end-session-service");
 
 const customerProfiles = require("./data/personalization");
+const welcomePrompt = require("./prompts/welcomePrompt");
 
 // Import helper functions
 const {
@@ -28,11 +29,7 @@ app.post("/incoming", (req, res) => {
     const response = `\
 <Response>
   <Connect action="https://voxray-6456.twil.io/live-agent-handoff">
-    <ConversationRelay  url="wss://${process.env.SERVER}/sockets" 
-                        ttsProvider="${cfg.ttsProvider}" 
-                        voice="${cfg.ttsVoice}" 
-                        dtmfDetection="true" 
-                        interruptByDtmf="true" />
+    <ConversationRelay url="wss://${process.env.SERVER}/sockets" ttsProvider="${cfg.ttsProvider}" voice="${cfg.ttsVoice}" dtmfDetection="true" interruptByDtmf="true" />
   </Connect>
 </Response>`;
     res.type("text/xml");
@@ -107,9 +104,7 @@ app.ws("/sockets", (ws) => {
           }
 
           // Generate a personalized greeting
-          const greetingText = userProfile
-            ? `Generate a warm, personalized greeting for ${userProfile.profile.firstName}, a returning prospect. Keep it brief, and use informal/casual language so you sound like a friend, not a call center agent.`
-            : "Generate a warm greeting for a new potential prospect. Keep it brief, and use informal/casual language so you sound like a friend, not a call center agent.";
+          const greetingText = welcomePrompt;
 
           // Send the greeting as a system prompt to the assistant
           await gptService.completion(greetingText, interactionCount, "system");

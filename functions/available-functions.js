@@ -10,7 +10,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
 // Path to the log file
-const logFilePath = path.join(__dirname, "database-logs");
+const logFilePath = path.join(__dirname, "../data/database-logs.txt");
 
 // Utility function to append log entries
 function appendLogEntry(entry) {
@@ -82,36 +82,6 @@ async function liveAgentHandoff(args) {
   };
 }
 
-function verifyVIN({ vinInput, vehicleId }) {
-  // Remove whitespace and convert to uppercase
-  const vinLast6 = vinInput.replace(/\s+/g, "").toUpperCase();
-
-  // Retrieve the vehicle record from the database using vehicleId
-  const vehicle = mockDatabase.vehicles.find((v) => v.id === vehicleId);
-
-  if (!vehicle) {
-    return {
-      isValid: false,
-      message: "Vehicle not found in the database.",
-    };
-  }
-
-  const actualVinLast6 = vehicle.vin.slice(-6).toUpperCase();
-
-  let correctChars = 0;
-  for (let i = 0; i < vinLast6.length; i++) {
-    if (vinLast6[i] === actualVinLast6[i]) {
-      correctChars++;
-    }
-  }
-
-  return {
-    isValid: vinLast6 === actualVinLast6,
-    correctChars: correctChars,
-    totalChars: vinLast6.length,
-  };
-}
-
 // Function to set pickup availability
 async function setPickupAvailability(args) {
   const { vehicleId, availabilityDate } = args;
@@ -120,6 +90,7 @@ async function setPickupAvailability(args) {
   const logEntry = {
     fn: "setPickupAvailability",
     payload: {
+      vehicleId,
       date: availabilityDate,
     },
   };
@@ -144,6 +115,7 @@ async function setPickupInstructions(args) {
   const logEntry = {
     fn: "setPickupInstructions",
     payload: {
+      vehicleId,
       instructions,
     },
   };
@@ -168,15 +140,12 @@ async function setAdditionalDetails(args) {
   const logEntry = {
     fn: "setAdditionalDetails",
     payload: {
+      vehicleId,
       keyCount,
       isDriveable,
+      otherDetails,
     },
   };
-
-  // Include otherDetails if provided
-  if (otherDetails) {
-    logEntry.payload.otherDetails = otherDetails;
-  }
 
   // Append the log entry to the database-logs file
   appendLogEntry(logEntry);
@@ -193,7 +162,6 @@ async function setAdditionalDetails(args) {
 module.exports = {
   endCall,
   liveAgentHandoff,
-  verifyVIN,
   setPickupAvailability,
   setPickupInstructions,
   setAdditionalDetails,

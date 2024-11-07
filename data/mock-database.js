@@ -7,7 +7,7 @@ const mockDatabase = {
       model: "Corolla",
       year: 2010,
       color: "White",
-      vin: "1TEABC12", // The VIN number starts with "1TE" and ends with "ABC12"
+      vin: "JTDBU4EE9A9123456", // The VIN number starts with "1TE" and ends with "ABC12"
       odometerReading: 125454,
       features: ["Cloth seats", "Sunroof", "CD player", "Power windows"],
       pickupDetails: {}, // Will be filled during the conversation

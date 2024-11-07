@@ -82,39 +82,34 @@ async function liveAgentHandoff(args) {
   };
 }
 
-// Function to verify VIN (using last 6 characters)
-async function verifyVIN(args) {
-  const { vinLast6, vehicleId } = args;
+function verifyVIN({ vinInput, vehicleId }) {
+  // Remove whitespace and convert to uppercase
+  const vinLast6 = vinInput.replace(/\s+/g, "").toUpperCase();
 
-  // Find the vehicle in the database
-  const vehicle = mockDatabase.vehicles.find((v) => v.vehicleId === vehicleId);
+  // Retrieve the vehicle record from the database using vehicleId
+  const vehicle = mockDatabase.vehicles.find((v) => v.id === vehicleId);
 
   if (!vehicle) {
-    console.log(`[verifyVIN] Vehicle with ID ${vehicleId} not found.`);
     return {
-      status: "error",
-      message: `Vehicle with ID ${vehicleId} not found in the database.`,
+      isValid: false,
+      message: "Vehicle not found in the database.",
     };
   }
 
-  // Get the last 6 characters of the VIN from the database
-  const vehicleVinLast6 = vehicle.vin.slice(-6).toUpperCase();
-  const providedVinLast6 = vinLast6.toUpperCase();
+  const actualVinLast6 = vehicle.vin.slice(-6).toUpperCase();
 
-  // Check if VIN last 6 characters match
-  if (vehicleVinLast6 === providedVinLast6) {
-    console.log(`[verifyVIN] VIN verified successfully.`);
-    return {
-      status: "success",
-      message: `VIN verified successfully.`,
-    };
-  } else {
-    console.log(`[verifyVIN] VIN verification failed.`);
-    return {
-      status: "error",
-      message: `Provided VIN does not match our records.`,
-    };
+  let correctChars = 0;
+  for (let i = 0; i < vinLast6.length; i++) {
+    if (vinLast6[i] === actualVinLast6[i]) {
+      correctChars++;
+    }
   }
+
+  return {
+    isValid: vinLast6 === actualVinLast6,
+    correctChars: correctChars,
+    totalChars: vinLast6.length,
+  };
 }
 
 // Function to set pickup availability

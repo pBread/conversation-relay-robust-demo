@@ -42,22 +42,21 @@ const tools = [
     function: {
       name: "verifyVIN",
       description:
-        "Verifies the provided last 6 characters of the VIN number against the vehicle information in the database.",
+        "Verifies the last six characters of a VIN and provides vehicle details.",
       parameters: {
         type: "object",
         properties: {
-          vinLast6: {
+          vinInput: {
             type: "string",
             description:
-              "The last 6 characters of the Vehicle Identification Number (VIN) provided by the user.",
+              "The last six characters of the VIN provided by the user.",
           },
           vehicleId: {
             type: "string",
-            description:
-              "The internal database ID for the vehicle the agent is calling about.",
+            description: "The internal database ID of the vehicle.",
           },
         },
-        required: ["vinLast6", "vehicleId"],
+        required: ["vinInput", "vehicleId"],
       },
     },
   },

@@ -1,3 +1,4 @@
+// function-manifest.js
 const tools = [
   {
     type: "function",
@@ -41,14 +42,14 @@ const tools = [
     function: {
       name: "verifyVIN",
       description:
-        "Verifies the provided VIN number against the vehicle information in the database.",
+        "Verifies the provided last 6 characters of the VIN number against the vehicle information in the database.",
       parameters: {
         type: "object",
         properties: {
-          vin: {
+          vinLast6: {
             type: "string",
             description:
-              "The Vehicle Identification Number (VIN) provided by the user.",
+              "The last 6 characters of the Vehicle Identification Number (VIN) provided by the user.",
           },
           vehicleId: {
             type: "string",
@@ -56,16 +57,16 @@ const tools = [
               "The internal database ID for the vehicle the agent is calling about.",
           },
         },
-        required: ["vin", "vehicleId"],
+        required: ["vinLast6", "vehicleId"],
       },
     },
   },
   {
     type: "function",
     function: {
-      name: "schedulePickup",
+      name: "setPickupAvailability",
       description:
-        "Schedules the vehicle pickup by recording the date when the vehicle will be available and the body shop's working hours.",
+        "Records when the vehicle will be ready for pickup by updating the database with the availability date.",
       parameters: {
         type: "object",
         properties: {
@@ -79,20 +80,15 @@ const tools = [
             description:
               "The date when the vehicle will be available for pickup (YYYY-MM-DD). **Convert any relative date expressions to this format based on {{currentDate}}.**",
           },
-          workingHours: {
-            type: "string",
-            description:
-              "The working hours of the body shop during which the pickup can occur.",
-          },
         },
-        required: ["vehicleId", "availabilityDate", "workingHours"],
+        required: ["vehicleId", "availabilityDate"],
       },
     },
   },
   {
     type: "function",
     function: {
-      name: "getPickupInstructions",
+      name: "setPickupInstructions",
       description:
         "Records any special instructions for the pickup, such as who to ask for, specific location details, or other relevant information.",
       parameters: {
@@ -116,9 +112,9 @@ const tools = [
   {
     type: "function",
     function: {
-      name: "getAdditionalVehicleDetails",
+      name: "setAdditionalDetails",
       description:
-        "Collects additional required data about the vehicle, such as the number of available keys.",
+        "Collects additional required data about the vehicle, such as the number of available keys, and updates the database.",
       parameters: {
         type: "object",
         properties: {
@@ -127,9 +123,13 @@ const tools = [
             description:
               "The internal database ID for the vehicle in question.",
           },
-          keys: {
+          keyCount: {
             type: "integer",
             description: "The number of keys available for the vehicle.",
+          },
+          isDriveable: {
+            type: "boolean",
+            description: "Indicates whether the vehicle is driveable.",
           },
           otherDetails: {
             type: "string",

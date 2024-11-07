@@ -2,21 +2,6 @@
 
 Wouldn't it be neat if you could build an app that allowed you to chat with ChatGPT on the phone?
 
-Twilio gives you a superpower called [Media Streams](https://twilio.com/media-streams). Media Streams provides a Websocket connection to both sides of a phone call. You can get audio streamed to you, process it, and send audio back.
-
-This app serves as a demo exploring two services:
-
-- [OpenAI](https://openai.com) for GPT prompt completion
-
-These service combine to create a voice application that is remarkably better at transcribing, understanding, and speaking than traditional IVR systems.
-
-Features:
-
-- 🏁 Returns responses with low latency, typically 1 second by utilizing streaming.
-- ❗️ Allows the user to interrupt the GPT assistant and ask a different question.
-- 📔 Maintains chat history with GPT.
-- 🛠️ Allows the GPT to call external tools.
-
 ## Setting up for Development
 
 ### Prerequisites
@@ -85,7 +70,7 @@ You can also use the Twilio CLI:
 twilio phone-numbers:update +1[your-twilio-number] --voice-url=https://your-server.ngrok.io/incoming
 ```
 
-This configuration tells Twilio to send incoming call audio to your app when someone calls your number. The app responds to the incoming call webhook with a [Stream](https://www.twilio.com/docs/voice/twiml/stream) TwiML verb that will connect an audio media stream to your websocket server.
+This configuration tells Twilio to send incoming call audio to your app when someone calls your number. The app responds to the incoming call webhook with a `<ConversationRelay>` TwiML verb that will connect your websocket server.
 
 ## Modifying the ChatGPT Context & Prompt
 
@@ -249,13 +234,6 @@ For our `placeOrder` function, the arguments passed will look like this:
 Your function should always return a value: GPT will get confused when the function returns nothing, and may continue trying to call the function expecting an answer. If your function doesn't have any data to return to the GPT, you should still return a response with an instruction like "Tell the user that their request was processed successfully." This prevents the GPT from calling the function repeatedly and wasting tokens.
 
 Any data that you return to the GPT should match the expected format listed in the `returns` key of `function-manifest.js`.
-
-## Utility Scripts for Placing Calls
-
-The `scripts` directory contains two files that allow you to place test calls:
-
-- `npm run inbound` will place an automated call from a Twilio number to your app and speak a script. You can adjust this to your use-case, e.g. as an automated test.
-- `npm run outbound` will place an outbound call that connects to your app. This can be useful if you want the app to call your phone so that you can manually test it.
 
 ## Testing with Jest
 

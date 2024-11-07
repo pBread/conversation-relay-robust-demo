@@ -25,7 +25,7 @@ const tools = [
           reason: {
             type: "string",
             description:
-              "The reason for the handoff, such as user request, incorrect VIN, mismatched vehicle description, or other issues.",
+              "The reason for the handoff, such as user request, mismatched vehicle information, or other issues.",
           },
           context: {
             type: "string",
@@ -34,29 +34,6 @@ const tools = [
           },
         },
         required: ["reason"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "verifyVIN",
-      description:
-        "Verifies the last six characters of a VIN and provides vehicle details.",
-      parameters: {
-        type: "object",
-        properties: {
-          vinInput: {
-            type: "string",
-            description:
-              "The last six characters of the VIN provided by the user.",
-          },
-          vehicleId: {
-            type: "string",
-            description: "The internal database ID of the vehicle.",
-          },
-        },
-        required: ["vinInput", "vehicleId"],
       },
     },
   },
@@ -128,7 +105,7 @@ const tools = [
           },
           isDriveable: {
             type: "boolean",
-            description: "Indicates whether the vehicle is driveable.",
+            description: "Indicates whether the vehicle is drivable.",
           },
           otherDetails: {
             type: "string",
